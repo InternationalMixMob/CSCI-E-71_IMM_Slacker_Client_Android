@@ -13,6 +13,7 @@ test:
     - gradle test 
 
   post:
+    - gradle build
     - cp -R ./build/* $CIRCLE_ARTIFACTS/
  #   - gradle jacocoTestReport coveralls
 
