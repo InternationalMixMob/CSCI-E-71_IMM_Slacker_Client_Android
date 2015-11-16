@@ -3,4 +3,5 @@ deployment:
     branch: master
     commands:
       - mvn package
+      - chmod +x publish.sh
       - ./publish.sh
