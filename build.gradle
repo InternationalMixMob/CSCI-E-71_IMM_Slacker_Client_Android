@@ -30,18 +30,19 @@ jar {
 }
 
 
-apply plugin: 'jacoco'
-apply plugin: 'com.github.kt3k.coveralls'
-
 buildscript {
     repositories {
+        maven { url 'https://plugins.gradle.org/m2' }
         mavenCentral()
+        jcenter()
     }
 
     dependencies {
         classpath 'org.kt3k.gradle.plugin:coveralls-gradle-plugin:2.0.1'
     }
 }
+apply plugin: 'jacoco'
+apply plugin: 'com.github.kt3k.coveralls'
 
 jacocoTestReport {
     reports {
