@@ -1,7 +1,23 @@
-deployment:
-  production:
-    branch: master
-    commands:
-      - mvn package
-      - chmod +x publish.sh
-      - ./publish.sh
+
+machine:
+  java:
+    version:
+      oraclejdk7
+
+general:
+  branches:
+    only:
+      - master # only build/deploy from master
+ # artifacts:
+ #   - "build/reports/tests" # preserve the generated HTML test reports
+
+dependencies:
+  override:
+  	- gradle dependencies
+
+test:
+  override:
+    - gradle test 
+
+  post:
+    - gradle jacocoTestReport coveralls
