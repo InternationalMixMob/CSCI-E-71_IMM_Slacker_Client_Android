@@ -1,9 +1,13 @@
-plugins {
-  id "java"
-  id "idea"
+
+apply plugin: 'java'
+apply plugin: 'idea'
+
+//plugins {
+//  id "java"
+//  id "idea"
  // id "jacoco"
  // id "com.github.kt3k.coveralls" version "2.4.0x"
-}
+//}
 
 
 repositories {
