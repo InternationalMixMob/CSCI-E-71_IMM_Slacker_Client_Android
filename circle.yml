@@ -1,19 +1,12 @@
 
 machine:
   java:
-    version:
-      oraclejdk7
+    version: oraclejdk7
 
-general:
-  branches:
-    only:
-      - master # only build/deploy from master
- # artifacts:
- #   - "build/reports/tests" # preserve the generated HTML test reports
 
 dependencies:
   override:
-  	- gradle dependencies
+    - gradle dependencies
 
 test:
   override:
