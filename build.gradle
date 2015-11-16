@@ -1,7 +1,9 @@
-apply plugin: 'java'
-apply plugin: 'idea'
-apply plugin: 'jacoco'
-
+plugins {
+  id "java"
+  id "idea"
+  id "jacoco"
+  id "com.github.kt3k.coveralls" version "2.4.0x"
+}
 
 
 repositories {
@@ -22,18 +24,6 @@ jar {
     }
 }
 
-buildscript {
-  repositories {
-    maven {
-      url "https://plugins.gradle.org/m2/"
-    }
-  }
-  dependencies {
-    classpath "org.kt3k.gradle.plugin:coveralls-gradle-plugin:2.4.0x"
-  }
-}
-
-apply plugin: "com.github.kt3k.coveralls"
 
 uploadArchives {
     repositories {
