@@ -31,7 +31,7 @@ jar {
     }
 }
 
-
+/*
 buildscript {
     repositories {
         maven { url 'https://plugins.gradle.org/m2' }
@@ -52,3 +52,4 @@ jacocoTestReport {
         html.enabled = true
     }
 }
+*/
