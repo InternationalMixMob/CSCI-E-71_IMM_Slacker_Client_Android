@@ -21,4 +21,4 @@ git commit -m "Upload new Android client library"
 
 # Push to master of plugin repo
 # /dev/null to hide any sensitive credential data that might otherwise be exposed.
-git push --quiet "https://${GH_TOKEN}@${GH_REF}" origin master > /dev/null 2>&1
+git push --quiet "https://${GH_TOKEN}@${GH_REF}" master > /dev/null 2>&1
