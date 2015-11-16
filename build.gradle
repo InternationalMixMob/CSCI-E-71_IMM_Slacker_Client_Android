@@ -1,6 +1,7 @@
 
 apply plugin: 'java'
 apply plugin: 'idea'
+apply plugin: 'maven'
 
 //plugins {
 //  id "java"
@@ -29,14 +30,22 @@ jar {
 }
 
 
-//jacocoTestReport {
-//    reports {
-//        xml.enabled = true // coveralls plugin depends on xml format report
-//        html.enabled = true
-//   }
-//}
+apply plugin: 'jacoco'
+apply plugin: 'com.github.kt3k.coveralls'
 
-//tasks.coveralls {
-  //dependsOn 'check'
-  //onlyIf { isCI }
-//}
+buildscript {
+    repositories {
+        mavenCentral()
+    }
+
+    dependencies {
+        classpath 'org.kt3k.gradle.plugin:coveralls-gradle-plugin:2.0.1'
+    }
+}
+
+jacocoTestReport {
+    reports {
+        xml.enabled = true // coveralls plugin depends on xml format report
+        html.enabled = true
+    }
+}
