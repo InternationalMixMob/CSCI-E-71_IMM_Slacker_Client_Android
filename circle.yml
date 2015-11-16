@@ -6,7 +6,7 @@ machine:
 
 dependencies:
   override:
-    - gradle dependencies
+    - gradle dependencies --debug
 
 test:
   override:
