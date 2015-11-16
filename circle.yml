@@ -13,4 +13,4 @@ test:
     - gradle test 
 
   post:
-    - gradle jacocoTestReport coveralls
+ #   - gradle jacocoTestReport coveralls

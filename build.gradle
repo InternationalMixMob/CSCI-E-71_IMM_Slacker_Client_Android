@@ -1,8 +1,8 @@
 plugins {
   id "java"
   id "idea"
-  id "jacoco"
-  id "com.github.kt3k.coveralls" version "2.4.0x"
+ // id "jacoco"
+ // id "com.github.kt3k.coveralls" version "2.4.0x"
 }
 
 
@@ -25,22 +25,14 @@ jar {
 }
 
 
-uploadArchives {
-    repositories {
-       flatDir {
-           dirs 'repos'
-       }
-    }
-}
+//jacocoTestReport {
+//    reports {
+//        xml.enabled = true // coveralls plugin depends on xml format report
+//        html.enabled = true
+//   }
+//}
 
-jacocoTestReport {
-    reports {
-        xml.enabled = true // coveralls plugin depends on xml format report
-        html.enabled = true
-    }
-}
-
-tasks.coveralls {
-  dependsOn 'check'
-  onlyIf { isCI }
-}
+//tasks.coveralls {
+  //dependsOn 'check'
+  //onlyIf { isCI }
+//}
