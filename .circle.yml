@@ -1,0 +1,9 @@
+test:
+  override:
+    - mvn test
+deployment:
+  production:
+    branch: master
+    commands:
+      - mvn package
+      - ./publish.sh
