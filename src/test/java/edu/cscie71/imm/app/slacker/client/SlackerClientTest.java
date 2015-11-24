@@ -9,26 +9,22 @@ public class SlackerClientTest {
     MessagePost okMsg;
     String okMsgResponse;
 
-    @BeforeClass
+    @Before
     public void setUp() throws Exception {
         slack = new SlackerClient();
         String token = "xoxp-10020492535-10036686290-14227963249-1cb545e1ae";
-        String immChannel = "C0AJL0599";
-        okMsg = new MessagePost(immChannel, "This is a test.");
+        String immTestChannel = "C0F6U0R5E";
+        okMsg = new MessagePost(immTestChannel, "This is a test.");
         okMsgResponse = slack.postMessage(token, okMsg);
     }
 
     @Test
-    public void okMsgResponseIsOk() throws Exception {
+    public void okMsgResponseIsOkAndContainsMessage() throws Exception {
         Assert.assertThat(okMsgResponse, containsString("\"ok\":true"));
-    }
-
-    @Test
-    public void okMsgResponseContainsMessage() throws Exception {
         Assert.assertThat(okMsgResponse, containsString("\"text\":\"This is a test.\""));
     }
 
-    @AfterClass
+    @After
     public void tearDown() throws Exception {
         slack = null;
         okMsg = null;
