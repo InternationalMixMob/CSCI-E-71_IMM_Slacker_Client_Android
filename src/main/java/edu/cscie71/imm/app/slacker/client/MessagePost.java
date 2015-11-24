@@ -4,9 +4,9 @@ public class MessagePost {
     private String channel;
     private String message;
     private boolean as_user = true;
+    private String token;
 
     public MessagePost(String channel, String message) {
-        //this.token = token;
         this.channel = channel;
         this.message = message;
     }
@@ -33,5 +33,13 @@ public class MessagePost {
 
     public void setAs_user(boolean as_user) {
         this.as_user = as_user;
+    }
+
+    public String getToken() {
+        return token;
+    }
+
+    public void setToken(String token) {
+        this.token = token;
     }
 }

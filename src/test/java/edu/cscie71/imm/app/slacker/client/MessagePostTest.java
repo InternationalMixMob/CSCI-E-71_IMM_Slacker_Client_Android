@@ -52,4 +52,10 @@ public class MessagePostTest {
         msg.setAs_user(false);
         assertFalse(msg.isAs_user());
     }
+
+    @Test
+    public void testSetToken() throws Exception {
+        msg.setToken("test-token");
+        assertEquals("test-token", msg.getToken());
+    }
 }

@@ -5,5 +5,5 @@ package edu.cscie71.imm.app.slacker.client;
  */
 
 public interface ISlackerClient {
-    boolean postMessage(String token, MessagePost message);
+    String postMessage(String token, MessagePost message);
 }
