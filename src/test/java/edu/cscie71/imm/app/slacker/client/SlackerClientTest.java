@@ -1,15 +1,13 @@
 package edu.cscie71.imm.app.slacker.client;
 
-import org.junit.*;
-import static org.junit.matchers.JUnitMatchers.containsString;
+import junit.framework.TestCase;
 
-public class SlackerClientTest {
+public class SlackerClientTest extends TestCase{
 
     ISlackerClient slack;
     MessagePost okMsg;
     String okMsgResponse;
 
-    @Before
     public void setUp() throws Exception {
         slack = new SlackerClient();
         String token = "xoxp-10020492535-10036686290-14227963249-1cb545e1ae";
@@ -18,13 +16,11 @@ public class SlackerClientTest {
         okMsgResponse = slack.postMessage(token, okMsg);
     }
 
-    @Test
-    public void okMsgResponseIsOkAndContainsMessage() throws Exception {
-        Assert.assertThat(okMsgResponse, containsString("\"ok\":true"));
-        Assert.assertThat(okMsgResponse, containsString("\"text\":\"This is a test.\""));
+    public void testResponseIsOkAndContainsMessage() throws Exception {
+        assertTrue(okMsgResponse.contains("\"ok\":true"));
+        assertTrue(okMsgResponse.contains("\"text\":\"This is a test.\""));
     }
 
-    @After
     public void tearDown() throws Exception {
         slack = null;
         okMsg = null;
