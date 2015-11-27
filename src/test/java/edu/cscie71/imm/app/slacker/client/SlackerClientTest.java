@@ -2,7 +2,7 @@ package edu.cscie71.imm.app.slacker.client;
 
 import junit.framework.TestCase;
 
-public class SlackerClientTest extends TestCase{
+public class SlackerClientTest extends TestCase {
 
     ISlackerClient slack;
     MessagePost okMsg;
@@ -16,9 +16,8 @@ public class SlackerClientTest extends TestCase{
         okMsgResponse = slack.postMessage(token, okMsg);
     }
 
-    public void testResponseIsOkAndContainsMessage() throws Exception {
-        assertTrue(okMsgResponse.contains("\"ok\":true"));
-        assertTrue(okMsgResponse.contains("\"text\":\"This is a test.\""));
+    public void testOkMsgIsNotOK() throws Exception {
+        assertTrue(okMsgResponse.equals("{\"ok\":false,\"error\":\"not_authed\"}"));
     }
 
     public void tearDown() throws Exception {

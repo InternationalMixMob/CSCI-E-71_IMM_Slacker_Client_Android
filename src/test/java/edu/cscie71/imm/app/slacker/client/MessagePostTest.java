@@ -24,12 +24,12 @@ public class MessagePostTest extends TestCase{
     }
 
     public void testGetMessage() throws Exception {
-        assertEquals("This is a test.", msg.getMessage());
+        assertEquals("This is a test.", msg.getText());
     }
 
     public void testSetMessage() throws Exception {
-        msg.setMessage("New message");
-        assertEquals("New message", msg.getMessage());
+        msg.setText("New message");
+        assertEquals("New message", msg.getText());
     }
 
     public void testIsAs_user_defaults_true() throws Exception {
@@ -44,5 +44,11 @@ public class MessagePostTest extends TestCase{
     public void testSetToken() throws Exception {
         msg.setToken("test-token");
         assertEquals("test-token", msg.getToken());
+    }
+
+    public void testToJson() throws Exception {
+        msg.setToken("test-token");
+        String expectedJson = "{\"channel\":\"#testchannel\",\"text\":\"This is a test.\",\"as_user\":true,\"token\":\"test-token\"}";
+        assertEquals(expectedJson, msg.toJson());
     }
 }

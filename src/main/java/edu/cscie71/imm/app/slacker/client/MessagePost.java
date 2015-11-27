@@ -1,14 +1,16 @@
 package edu.cscie71.imm.app.slacker.client;
 
+import com.google.gson.Gson;
+
 public class MessagePost {
     private String channel;
-    private String message;
+    private String text;
     private boolean as_user = true;
     private String token;
 
-    public MessagePost(String channel, String message) {
+    public MessagePost(String channel, String text) {
         this.channel = channel;
-        this.message = message;
+        this.text = text;
     }
 
     public String getChannel() {
@@ -19,12 +21,12 @@ public class MessagePost {
         this.channel = channel;
     }
 
-    public String getMessage() {
-        return message;
+    public String getText() {
+        return text;
     }
 
-    public void setMessage(String message) {
-        this.message = message;
+    public void setText(String text) {
+        this.text = text;
     }
 
     public boolean isAs_user() {
@@ -41,5 +43,10 @@ public class MessagePost {
 
     public void setToken(String token) {
         this.token = token;
+    }
+
+    public String toJson() {
+        Gson gson = new Gson();
+        return gson.toJson(this);
     }
 }
