@@ -8,5 +8,5 @@ import java.io.IOException;
  */
 
 public interface ISlackerClient {
-    String postMessage(String token, MessagePost message) throws IOException, ClientProtocolException;
+    String postMessage(String token, MessagePost message);
 }

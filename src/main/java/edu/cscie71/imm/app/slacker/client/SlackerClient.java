@@ -8,15 +8,24 @@ import java.io.IOException;
 
 public class SlackerClient implements ISlackerClient {
 
-    public String postMessage(String token, MessagePost message) throws IOException, ClientProtocolException {
+    private static final String MESSAGE_URL = "https://slack.com/api/chat.postMessage";
+
+    public String postMessage(String token, MessagePost message) {
         message.setToken(token);
-        String url = "https://slack.com/api/chat.postMessage";
         List<NameValuePair> input = message.toForm();
-        return postToURL(url, input);
+        return postToURL(MESSAGE_URL, input);
     }
 
-    private String postToURL(String url, List<NameValuePair> formData)
-            throws IOException, ClientProtocolException {
-        return Request.Post(url).bodyForm(formData).execute().returnContent().asString();
+    private String postToURL(String url, List<NameValuePair> formData) {
+        Request toSend = Request.Post(url).bodyForm(formData);
+        try {
+            return toSend.execute().returnContent().asString();
+        }
+        catch (ClientProtocolException e) {
+            return "{\"ok\":false,\"error\":\"client_protocol_exception: " + e.getMessage() + "\"}";
+        }
+        catch (IOException e) {
+            return "{\"ok\":false,\"error\":\"io_exception: " + e.getMessage() + "\"}";
+        }
     }
 }
