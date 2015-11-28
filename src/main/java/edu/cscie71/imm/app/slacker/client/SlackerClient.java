@@ -1,43 +1,22 @@
 package edu.cscie71.imm.app.slacker.client;
 
-import java.io.BufferedReader;
+import org.apache.http.client.ClientProtocolException;
+import org.apache.http.client.fluent.Request;
+import org.apache.http.NameValuePair;
+import java.util.List;
 import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.OutputStream;
-import javax.net.ssl.HttpsURLConnection;
-import java.net.URL;
 
 public class SlackerClient implements ISlackerClient {
 
-    public String postMessage(String token, MessagePost message) throws IOException {
+    public String postMessage(String token, MessagePost message) throws IOException, ClientProtocolException {
         message.setToken(token);
-        URL url = new URL("https://slack.com/api/chat.postMessage");
-        String input = message.toJson();
+        String url = "https://slack.com/api/chat.postMessage";
+        List<NameValuePair> input = message.toForm();
         return postToURL(url, input);
     }
 
-    private String postToURL(URL url, String input) throws IOException {
-        HttpsURLConnection connection = (HttpsURLConnection) url.openConnection();
-        connection.setDoOutput(true);
-        connection.setRequestMethod("POST");
-        connection.setRequestProperty("Content-Type", "application/json; charset=utf-8");
-        //System.out.println("Connection created.");
-
-        OutputStream payload = connection.getOutputStream();
-        payload.write(input.getBytes());
-        payload.flush();
-        //System.out.println("Input has been posted.");
-
-        BufferedReader response = new BufferedReader(new InputStreamReader(connection.getInputStream()));
-        String responseLine;
-        String wholeResponse = "";
-        while ((responseLine = response.readLine()) != null) {
-            //System.out.println("Response line: " + responseLine);
-            wholeResponse += responseLine;
-        }
-
-        connection.disconnect();
-        //System.out.println("Connection closed.");
-        return wholeResponse;
+    private String postToURL(String url, List<NameValuePair> formData)
+            throws IOException, ClientProtocolException {
+        return Request.Post(url).bodyForm(formData).execute().returnContent().asString();
     }
 }

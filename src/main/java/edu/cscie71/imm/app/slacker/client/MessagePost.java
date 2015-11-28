@@ -1,6 +1,8 @@
 package edu.cscie71.imm.app.slacker.client;
 
-import com.google.gson.Gson;
+import java.util.List;
+import org.apache.http.NameValuePair;
+import org.apache.http.client.fluent.Form;
 
 public class MessagePost {
     private String channel;
@@ -45,8 +47,14 @@ public class MessagePost {
         this.token = token;
     }
 
-    public String toJson() {
-        Gson gson = new Gson();
-        return gson.toJson(this);
+    public List<NameValuePair> toForm() {
+        Form form = Form.form();
+        if (this.token != null) {
+            form.add("token", this.token);
+        }
+        form.add("channel", this.channel)
+                .add("text", this.text)
+                .add("as_user", Boolean.toString(this.as_user));
+        return form.build();
     }
 }

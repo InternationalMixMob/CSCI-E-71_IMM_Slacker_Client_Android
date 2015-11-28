@@ -1,6 +1,9 @@
 package edu.cscie71.imm.app.slacker.client;
 
 import junit.framework.TestCase;
+import org.apache.http.client.fluent.Form;
+import org.apache.http.NameValuePair;
+import java.util.List;
 
 public class MessagePostTest extends TestCase{
 
@@ -46,9 +49,15 @@ public class MessagePostTest extends TestCase{
         assertEquals("test-token", msg.getToken());
     }
 
-    public void testToJson() throws Exception {
+    public void testToFormWithToken() throws Exception {
+        List<NameValuePair> expected = Form.form()
+                .add("token", "test-token")
+                .add("channel", "#testchannel")
+                .add("text", "This is a test.")
+                .add("as_user", "true")
+                .build();
         msg.setToken("test-token");
-        String expectedJson = "{\"channel\":\"#testchannel\",\"text\":\"This is a test.\",\"as_user\":true,\"token\":\"test-token\"}";
-        assertEquals(expectedJson, msg.toJson());
+        assertTrue(expected.containsAll(msg.toForm()));
+        assertTrue(msg.toForm().containsAll(expected));
     }
 }

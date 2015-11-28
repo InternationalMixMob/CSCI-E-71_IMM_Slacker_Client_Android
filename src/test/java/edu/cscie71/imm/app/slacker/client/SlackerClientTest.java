@@ -16,8 +16,9 @@ public class SlackerClientTest extends TestCase {
         okMsgResponse = slack.postMessage(token, okMsg);
     }
 
-    public void testOkMsgIsNotOK() throws Exception {
-        assertTrue(okMsgResponse.equals("{\"ok\":false,\"error\":\"not_authed\"}"));
+    public void testResponseIsOkAndContainsMessage() throws Exception {
+        assertTrue(okMsgResponse.contains("\"ok\":true"));
+        assertTrue(okMsgResponse.contains("\"text\":\"This is a test.\""));
     }
 
     public void tearDown() throws Exception {

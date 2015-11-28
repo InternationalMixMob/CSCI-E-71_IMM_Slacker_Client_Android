@@ -1,5 +1,6 @@
 package edu.cscie71.imm.app.slacker.client;
 
+import org.apache.http.client.ClientProtocolException;
 import java.io.IOException;
 
 /**
@@ -7,5 +8,5 @@ import java.io.IOException;
  */
 
 public interface ISlackerClient {
-    String postMessage(String token, MessagePost message) throws IOException;
+    String postMessage(String token, MessagePost message) throws IOException, ClientProtocolException;
 }
