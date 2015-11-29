@@ -9,4 +9,6 @@ import java.io.IOException;
 
 public interface ISlackerClient {
     String postMessage(String token, MessagePost message);
+
+    String getUserInfo(String token, String user);
 }
