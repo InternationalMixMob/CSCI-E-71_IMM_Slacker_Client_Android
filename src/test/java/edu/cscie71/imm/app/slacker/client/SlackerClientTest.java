@@ -1,26 +1,28 @@
 package edu.cscie71.imm.app.slacker.client;
 
-import org.junit.After;
-import org.junit.Assert;
-import org.junit.Before;
-import org.junit.Test;
+import junit.framework.TestCase;
 
-public class SlackerClientTest {
+public class SlackerClientTest extends TestCase {
 
     ISlackerClient slack;
+    MessagePost okMsg;
+    String okMsgResponse;
 
-    @Before
     public void setUp() throws Exception {
         slack = new SlackerClient();
+        String token = "xoxp-10020492535-10036686290-14227963249-1cb545e1ae";
+        String immTestChannel = "C0F6U0R5E";
+        okMsg = new MessagePost(immTestChannel, "This is a test.");
+        okMsgResponse = slack.postMessage(token, okMsg);
     }
 
-    @After
+    public void testResponseIsOkAndContainsMessage() throws Exception {
+        assertTrue(okMsgResponse.contains("\"ok\":true"));
+        assertTrue(okMsgResponse.contains("\"text\":\"This is a test.\""));
+    }
+
     public void tearDown() throws Exception {
         slack = null;
-    }
-
-    @Test
-    public void testPostMessage() throws Exception {
-        Assert.assertTrue(slack.postMessage("", null));
+        okMsg = null;
     }
 }

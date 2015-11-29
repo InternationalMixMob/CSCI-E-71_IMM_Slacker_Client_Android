@@ -1,55 +1,63 @@
 package edu.cscie71.imm.app.slacker.client;
 
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Test;
+import junit.framework.TestCase;
+import org.apache.http.client.fluent.Form;
+import org.apache.http.NameValuePair;
+import java.util.List;
 
-import static org.junit.Assert.*;
-
-public class MessagePostTest {
+public class MessagePostTest extends TestCase{
 
     public MessagePost msg;
 
-    @Before
     public void setUp() throws Exception {
         msg = new MessagePost("#testchannel", "This is a test.");
     }
 
-    @After
     public void tearDown() throws Exception {
         msg = null;
     }
 
-    @Test
     public void testGetChannel() throws Exception {
         assertEquals("#testchannel", msg.getChannel());
     }
 
-    @Test
     public void testSetChannel() throws Exception {
         msg.setChannel("#newChannel");
         assertEquals("#newChannel", msg.getChannel());
     }
 
-    @Test
     public void testGetMessage() throws Exception {
-        assertEquals("This is a test.", msg.getMessage());
+        assertEquals("This is a test.", msg.getText());
     }
 
-    @Test
     public void testSetMessage() throws Exception {
-        msg.setMessage("New message");
-        assertEquals("New message", msg.getMessage());
+        msg.setText("New message");
+        assertEquals("New message", msg.getText());
     }
 
-    @Test
     public void testIsAs_user_defaults_true() throws Exception {
         assertTrue(msg.isAs_user());
     }
 
-    @Test
     public void testSetAs_user() throws Exception {
         msg.setAs_user(false);
         assertFalse(msg.isAs_user());
+    }
+
+    public void testSetToken() throws Exception {
+        msg.setToken("test-token");
+        assertEquals("test-token", msg.getToken());
+    }
+
+    public void testToFormWithToken() throws Exception {
+        List<NameValuePair> expected = Form.form()
+                .add("token", "test-token")
+                .add("channel", "#testchannel")
+                .add("text", "This is a test.")
+                .add("as_user", "true")
+                .build();
+        msg.setToken("test-token");
+        assertTrue(expected.containsAll(msg.toForm()));
+        assertTrue(msg.toForm().containsAll(expected));
     }
 }
