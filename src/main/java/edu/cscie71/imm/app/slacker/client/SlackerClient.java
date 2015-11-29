@@ -12,12 +12,18 @@ public class SlackerClient implements ISlackerClient {
     private static final String MESSAGE_URL = "https://slack.com/api/chat.postMessage";
     private static final String USER_DATA_URL = "https://slack.com/api/users.info";
 
+    /**
+     * @inheritDoc
+     */
     public String postMessage(String token, MessagePost message) {
         message.setToken(token);
         List<NameValuePair> input = message.toForm();
         return postToURL(MESSAGE_URL, input);
     }
 
+    /**
+     * @inheritDoc
+     */
     public String getUserInfo(String token, String user) {
         Form form = Form.form();
         form.add("token", token).add("user", user);
