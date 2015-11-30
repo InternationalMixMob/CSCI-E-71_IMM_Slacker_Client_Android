@@ -11,6 +11,7 @@ public class SlackerClient implements ISlackerClient {
 
     private static final String MESSAGE = "/api/chat.postMessage";
     private static final String USER_DATA = "/api/users.info";
+    private static final String OATH_TOKEN = "/api/oauth.access";
     private final String BASE_URL;
 
     public SlackerClient() {
@@ -36,11 +37,20 @@ public class SlackerClient implements ISlackerClient {
      * @inheritDoc
      */
     public String getUserInfo(String token, String user) {
-        Form form = Form.form();
-        form.add("token", token).add("user", user);
         String queryString = "?token=".concat(URLEncoder.encode(token))
                 .concat("&user=").concat(URLEncoder.encode(user));
         return getFromURL(BASE_URL.concat(USER_DATA).concat(queryString));
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public String getOAuthToken(String clientId, String clientSecret, String code, String redirectUri) {
+        String queryString = "?client_id=".concat(URLEncoder.encode(clientId))
+                .concat("&client_secret=").concat(URLEncoder.encode(clientSecret))
+                .concat("&code=").concat(URLEncoder.encode(code))
+                .concat("&redirect_uri=").concat(URLEncoder.encode(redirectUri));
+        return getFromURL(BASE_URL.concat(OATH_TOKEN).concat(queryString));
     }
 
     private String getFromURL(String url) {

@@ -88,6 +88,20 @@ public class SlackerClientTest {
         Assert.assertTrue(userInfo.contains("\"error\":\"io_exception:"));
     }
 
+    @Test
+    public void getOAuthToken() throws Exception {
+        clientDriver.addExpectation(
+                onRequestTo("/api/oauth.access").withMethod(Method.GET)
+                        .withParam("client_id", "U123")
+                        .withParam("client_secret", "U123")
+                        .withParam("code", "X123")
+                        .withParam("redirect_uri", "https://localhost"),
+                giveResponse("\"access token\":\"xotx-123-123\",\"scope\":\"read\"", "text/plain")
+        );
+        String oAuthResponse = mockSlack.getOAuthToken("U123", "U123", "X123", "https://localhost");
+        Assert.assertTrue(oAuthResponse.contains("\"access token\":\"xotx-123-123\""));
+    }
+
     @After
     public void tearDown() throws Exception {
         mockSlack = null;
