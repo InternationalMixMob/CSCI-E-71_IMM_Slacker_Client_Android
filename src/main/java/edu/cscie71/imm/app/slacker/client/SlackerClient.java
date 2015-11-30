@@ -15,10 +15,13 @@ public class SlackerClient implements ISlackerClient {
     /**
      * @inheritDoc
      */
-    public String postMessage(String token, MessagePost message) {
-        message.setToken(token);
-        List<NameValuePair> input = message.toForm();
-        return postToURL(MESSAGE_URL, input);
+    public String postMessage(String token, String channel, String message) {
+        Form form = Form.form();
+        form.add("token", token)
+            .add("channel", channel)
+            .add("text", message)
+            .add("as_user", "true");
+        return postToURL(MESSAGE_URL, form.build());
     }
 
     /**
