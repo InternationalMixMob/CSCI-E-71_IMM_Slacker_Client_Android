@@ -2,21 +2,19 @@ package edu.cscie71.imm.app.slacker.client;
 
 import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.fluent.Request;
-import org.apache.http.NameValuePair;
 import org.apache.http.client.fluent.Form;
 
-import java.util.List;
 import java.io.IOException;
 import java.net.URLEncoder;
 
 public class SlackerClient implements ISlackerClient {
 
-    private static final String MESSAGE = "/chat.postMessage";
+    private static final String MESSAGE = "/api/chat.postMessage";
     private static final String USER_DATA = "/api/users.info";
     private final String BASE_URL;
 
     public SlackerClient() {
-        BASE_URL = "https://slack.com/api";
+        BASE_URL = "https://slack.com";
     }
 
     protected SlackerClient(String baseURL) {
@@ -49,11 +47,9 @@ public class SlackerClient implements ISlackerClient {
         Request toSend = Request.Get(url);
         try {
             return toSend.execute().returnContent().asString();
-        }
-        catch (ClientProtocolException e) {
+        } catch (ClientProtocolException e) {
             return "{\"ok\":false,\"error\":\"client_protocol_exception: " + e.getMessage() + "\"}";
-        }
-        catch (IOException e) {
+        } catch (IOException e) {
             return "{\"ok\":false,\"error\":\"io_exception: " + e.getMessage() + "\"}";
         }
     }
@@ -62,11 +58,9 @@ public class SlackerClient implements ISlackerClient {
         Request toSend = Request.Post(url);
         try {
             return toSend.execute().returnContent().asString();
-        }
-        catch (ClientProtocolException e) {
+        } catch (ClientProtocolException e) {
             return "{\"ok\":false,\"error\":\"client_protocol_exception: " + e.getMessage() + "\"}";
-        }
-        catch (IOException e) {
+        } catch (IOException e) {
             return "{\"ok\":false,\"error\":\"io_exception: " + e.getMessage() + "\"}";
         }
     }

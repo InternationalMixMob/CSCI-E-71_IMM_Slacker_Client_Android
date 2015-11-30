@@ -24,7 +24,7 @@ public class SlackerClientTest {
     @Test
     public void testResponseIsOkAndContainsMessage() throws Exception {
         clientDriver.addExpectation(
-                onRequestTo("/chat.postMessage").withMethod(Method.POST)
+                onRequestTo("/api/chat.postMessage").withMethod(Method.POST)
                         .withParam("as_user", "true")
                         .withParam("token", token)
                         .withParam("channel", immTestChannel)
@@ -47,6 +47,44 @@ public class SlackerClientTest {
         String userInfo = mockSlack.getUserInfo(token, "U0A12L68J");
         Assert.assertTrue(userInfo.contains("\"ok\":true"));
         Assert.assertTrue(userInfo.contains("\"real_name\":\"Jeffry Pincus\""));
+    }
+
+    @Test
+    public void test404FromGetRequest() throws Exception {
+        clientDriver.addExpectation(
+                onRequestTo("/api/users.info").withMethod(Method.GET).withAnyParams(),
+                giveEmptyResponse().withStatus(404)
+        );
+        String userInfo = mockSlack.getUserInfo(token, "U0A12L68J");
+        Assert.assertTrue(userInfo.contains("\"ok\":false"));
+        Assert.assertTrue(userInfo.contains("\"error\":\"client_protocol_exception:"));
+    }
+
+    @Test
+    public void test404FromPostRequest() throws Exception {
+        clientDriver.addExpectation(
+                onRequestTo("/api/chat.postMessage").withMethod(Method.POST).withAnyParams(),
+                giveEmptyResponse().withStatus(404)
+        );
+        String userInfo = mockSlack.postMessage(token, immTestChannel, message);
+        Assert.assertTrue(userInfo.contains("\"ok\":false"));
+        Assert.assertTrue(userInfo.contains("\"error\":\"client_protocol_exception:"));
+    }
+
+    @Test
+    public void testIOExceptionFromGetRequest() throws Exception {
+        mockSlack = new SlackerClient("https://testssl-expire.disig.sk/index.en.html");
+        String userInfo = mockSlack.getUserInfo(token, "U0A12L68J");
+        Assert.assertTrue(userInfo.contains("\"ok\":false"));
+        Assert.assertTrue(userInfo.contains("\"error\":\"io_exception:"));
+    }
+
+    @Test
+    public void testIOExceptionFromPostRequest() throws Exception {
+        mockSlack = new SlackerClient("https://testssl-expire.disig.sk/index.en.html");
+        String userInfo = mockSlack.postMessage(token, immTestChannel, message);
+        Assert.assertTrue(userInfo.contains("\"ok\":false"));
+        Assert.assertTrue(userInfo.contains("\"error\":\"io_exception:"));
     }
 
     @After
