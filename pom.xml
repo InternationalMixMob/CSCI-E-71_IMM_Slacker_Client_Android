@@ -25,6 +25,12 @@
             <version>4.12</version>
             <scope>test</scope>
         </dependency>
+        <dependency>
+            <groupId>com.github.rest-driver</groupId>
+            <artifactId>rest-client-driver</artifactId>
+            <version>1.1.41</version>
+            <scope>test</scope>
+        </dependency>
     </dependencies>
 
     <build>
