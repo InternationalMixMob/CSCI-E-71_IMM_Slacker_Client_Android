@@ -19,6 +19,7 @@ public class SlackerClientTest {
     @Before
     public void setUp() throws Exception {
         mockSlack = new SlackerClient(clientDriver.getBaseUrl());
+        ISlackerClient realSlack = new SlackerClient();
     }
 
     @Test
