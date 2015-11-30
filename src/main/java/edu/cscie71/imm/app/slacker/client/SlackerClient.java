@@ -1,10 +1,11 @@
 package edu.cscie71.imm.app.slacker.client;
 
-import org.apache.http.client.ClientProtocolException;
-import org.apache.http.client.fluent.Request;
-import org.apache.http.client.fluent.Form;
-
+import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStreamReader;
+import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.net.URLEncoder;
 
 public class SlackerClient implements ISlackerClient {
@@ -26,50 +27,49 @@ public class SlackerClient implements ISlackerClient {
      * @inheritDoc
      */
     public String postMessage(String token, String channel, String message) {
-        String queryString = "?token=".concat(URLEncoder.encode(token))
-                .concat("&channel=").concat(URLEncoder.encode(channel))
-                .concat("&text=").concat(URLEncoder.encode(message))
-                .concat("&as_user=").concat("true");
-        return postToURL(BASE_URL.concat(MESSAGE).concat(queryString));
+        String queryString = "?token=" + URLEncoder.encode(token)
+                + "&channel=" + URLEncoder.encode(channel)
+                + "&text=" + URLEncoder.encode(message)
+                + "&as_user=" + "true";
+        return makeRestTransaction(BASE_URL + MESSAGE + queryString, "POST");
     }
 
     /**
      * @inheritDoc
      */
     public String getUserInfo(String token, String user) {
-        String queryString = "?token=".concat(URLEncoder.encode(token))
-                .concat("&user=").concat(URLEncoder.encode(user));
-        return getFromURL(BASE_URL.concat(USER_DATA).concat(queryString));
+        String queryString = "?token=" + URLEncoder.encode(token)
+                + "&user=" + URLEncoder.encode(user);
+        return makeRestTransaction(BASE_URL + USER_DATA + queryString, "GET");
     }
 
     /**
      * @inheritDoc
      */
     public String getOAuthToken(String clientId, String clientSecret, String code, String redirectUri) {
-        String queryString = "?client_id=".concat(URLEncoder.encode(clientId))
-                .concat("&client_secret=").concat(URLEncoder.encode(clientSecret))
-                .concat("&code=").concat(URLEncoder.encode(code))
-                .concat("&redirect_uri=").concat(URLEncoder.encode(redirectUri));
-        return getFromURL(BASE_URL.concat(OATH_TOKEN).concat(queryString));
+        String queryString = "?client_id=" + URLEncoder.encode(clientId)
+                + "&client_secret=" + URLEncoder.encode(clientSecret)
+                + "&code=" + URLEncoder.encode(code)
+                + "&redirect_uri=" + URLEncoder.encode(redirectUri);
+        return makeRestTransaction(BASE_URL + OATH_TOKEN + queryString, "GET");
     }
 
-    private String getFromURL(String url) {
-        Request toSend = Request.Get(url);
+    private String makeRestTransaction(String url, String method) {
         try {
-            return toSend.execute().returnContent().asString();
-        } catch (ClientProtocolException e) {
-            return "{\"ok\":false,\"error\":\"client_protocol_exception: " + e.getMessage() + "\"}";
-        } catch (IOException e) {
-            return "{\"ok\":false,\"error\":\"io_exception: " + e.getMessage() + "\"}";
-        }
-    }
-
-    private String postToURL(String url) {
-        Request toSend = Request.Post(url);
-        try {
-            return toSend.execute().returnContent().asString();
-        } catch (ClientProtocolException e) {
-            return "{\"ok\":false,\"error\":\"client_protocol_exception: " + e.getMessage() + "\"}";
+            URL getURL = new URL(url);
+            HttpURLConnection connection = (HttpURLConnection) getURL.openConnection();
+            connection.setRequestMethod(method);
+            BufferedReader response = new BufferedReader(
+                    new InputStreamReader(connection.getInputStream())
+            );
+            StringBuilder sb = new StringBuilder();
+            String nextLine = "";
+            while ((nextLine = response.readLine()) != null) {
+                sb.append(nextLine);
+            }
+            return sb.toString();
+        } catch (MalformedURLException e) {
+            return "{\"ok\":false,\"error\":\"malformed_url: " + e.getMessage() + "\"}";
         } catch (IOException e) {
             return "{\"ok\":false,\"error\":\"io_exception: " + e.getMessage() + "\"}";
         }

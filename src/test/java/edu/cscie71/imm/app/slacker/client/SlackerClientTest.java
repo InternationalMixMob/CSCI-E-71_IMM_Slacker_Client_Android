@@ -9,6 +9,8 @@ import static com.github.restdriver.clientdriver.RestClientDriver.*;
 public class SlackerClientTest {
 
     ISlackerClient mockSlack;
+    ISlackerClient realSlack;
+    ISlackerClient badURL;
     String token = "xoxp-10020492535-10036686290-14227963249-1cb545e1ae";
     String immTestChannel = "C0F6U0R5E";
     String message = "This is the Android test.";
@@ -19,7 +21,15 @@ public class SlackerClientTest {
     @Before
     public void setUp() throws Exception {
         mockSlack = new SlackerClient(clientDriver.getBaseUrl());
-        ISlackerClient realSlack = new SlackerClient();
+        realSlack = new SlackerClient();
+        badURL = new SlackerClient("htp://foo.bar.com");
+    }
+
+    @After
+    public void tearDown() throws Exception {
+        mockSlack = null;
+        realSlack = null;
+        badURL = null;
     }
 
     @Test
@@ -38,6 +48,13 @@ public class SlackerClientTest {
     }
 
     @Test
+    public void testRealResponseIsOKAndContainsMessage() throws Exception {
+        String okMsgResponse = realSlack.postMessage(token, immTestChannel, message);
+        Assert.assertTrue(okMsgResponse.contains("\"ok\":true"));
+        Assert.assertTrue(okMsgResponse.contains("\"text\":\"This is the Android test.\""));
+    }
+
+    @Test
     public void testGetUserInfo() throws Exception {
         clientDriver.addExpectation(
                 onRequestTo("/api/users.info").withMethod(Method.GET)
@@ -51,6 +68,13 @@ public class SlackerClientTest {
     }
 
     @Test
+    public void testRealGetUserInfoIsOKAndContainsMessage() throws Exception {
+        String userInfo = realSlack.getUserInfo(token, "U0A12L68J");
+        Assert.assertTrue(userInfo.contains("\"ok\":true"));
+        Assert.assertTrue(userInfo.contains("\"real_name\":\"Jeffry Pincus\""));
+    }
+
+    @Test
     public void test404FromGetRequest() throws Exception {
         clientDriver.addExpectation(
                 onRequestTo("/api/users.info").withMethod(Method.GET).withAnyParams(),
@@ -58,7 +82,7 @@ public class SlackerClientTest {
         );
         String userInfo = mockSlack.getUserInfo(token, "U0A12L68J");
         Assert.assertTrue(userInfo.contains("\"ok\":false"));
-        Assert.assertTrue(userInfo.contains("\"error\":\"client_protocol_exception:"));
+        Assert.assertTrue(userInfo.contains("\"error\":\"io_exception:"));
     }
 
     @Test
@@ -69,7 +93,7 @@ public class SlackerClientTest {
         );
         String userInfo = mockSlack.postMessage(token, immTestChannel, message);
         Assert.assertTrue(userInfo.contains("\"ok\":false"));
-        Assert.assertTrue(userInfo.contains("\"error\":\"client_protocol_exception:"));
+        Assert.assertTrue(userInfo.contains("\"error\":\"io_exception:"));
     }
 
     @Test
@@ -102,8 +126,10 @@ public class SlackerClientTest {
         Assert.assertTrue(oAuthResponse.contains("\"access token\":\"xotx-123-123\""));
     }
 
-    @After
-    public void tearDown() throws Exception {
-        mockSlack = null;
+    @Test
+    public void testMalformedURL() throws Exception {
+        String userInfo = badURL.getUserInfo(token, "U0A12L68J");
+        Assert.assertTrue(userInfo.contains("\"ok\":false"));
+        Assert.assertTrue(userInfo.contains("\"error\":\"malformed_url: "));
     }
 }
