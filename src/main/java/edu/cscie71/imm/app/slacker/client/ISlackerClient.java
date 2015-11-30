@@ -11,11 +11,12 @@ public interface ISlackerClient {
     /**
      * Posts a message in a Slack channel.
      * @param token: OAuth token
-     * @param message: MessagePost object containing channel and message body
+     * @param channel: Slack channel ID to post message to.
+     * @param message: Message text to post in channel.
      * @return JSON string from Slack API
      * @see <a href="https://api.slack.com/methods/chat.postMessage">chat.postMessage</a>
      */
-    String postMessage(String token, MessagePost message);
+    String postMessage(String token, String channel, String message);
 
     /**
      * Retrieves a Slack user's information.
