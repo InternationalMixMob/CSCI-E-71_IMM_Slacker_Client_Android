@@ -47,11 +47,11 @@ public class SlackerClient implements ISlackerClient {
      * @inheritDoc
      */
     public String getOAuthToken(String clientId, String clientSecret, String code, String redirectUri) {
-        String queryString = "?client_id=".concat(URLEncoder.encode(clientId))
-                .concat("&client_secret=").concat(URLEncoder.encode(clientSecret))
-                .concat("&code=").concat(URLEncoder.encode(code))
-                .concat("&redirect_uri=").concat(URLEncoder.encode(redirectUri));
-        return makeRestTransaction(BASE_URL.concat(OATH_TOKEN).concat(queryString), "GET");
+        String queryString = "?client_id=" + URLEncoder.encode(clientId)
+                + "&client_secret=" + URLEncoder.encode(clientSecret)
+                + "&code=" + URLEncoder.encode(code)
+                + "&redirect_uri=" + URLEncoder.encode(redirectUri);
+        return makeRestTransaction(BASE_URL + OATH_TOKEN + queryString, "GET");
     }
 
     private String makeRestTransaction(String url, String method) {
