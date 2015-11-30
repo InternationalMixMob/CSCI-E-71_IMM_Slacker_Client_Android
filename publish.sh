@@ -6,7 +6,7 @@ rm -rf repo || exit 0;
 
 # Clone plugin repo and copy build artifact
 git clone "https://${GH_TOKEN}@${GH_REF}" repo
-cp target/Slacker.jar repo/src/android/libs/Slacker.jar
+cp target/Slacker-jar-with-dependencies.jar repo/src/android/libs/Slacker.jar
 
 # go to repo dir
 cd repo
