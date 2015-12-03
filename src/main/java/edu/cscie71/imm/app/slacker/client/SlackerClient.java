@@ -13,6 +13,7 @@ public class SlackerClient implements ISlackerClient {
     private static final String MESSAGE = "/api/chat.postMessage";
     private static final String USER_DATA = "/api/users.info";
     private static final String OATH_TOKEN = "/api/oauth.access";
+    private static final String CHANNELS_LIST = "/api/channels.list";
     private final String BASE_URL;
 
     public SlackerClient() {
@@ -52,6 +53,14 @@ public class SlackerClient implements ISlackerClient {
                 + "&code=" + URLEncoder.encode(code)
                 + "&redirect_uri=" + URLEncoder.encode(redirectUri);
         return makeRestTransaction(BASE_URL + OATH_TOKEN + queryString, "GET");
+    }
+
+    public String getChannelList(String token, boolean excludeArchivedChannels) {
+        String queryString = "?token=" + URLEncoder.encode(token);
+        if (excludeArchivedChannels) {
+            queryString += "&exclude_archived=1";
+        }
+        return makeRestTransaction(BASE_URL + CHANNELS_LIST + queryString, "GET");
     }
 
     private String makeRestTransaction(String url, String method) {

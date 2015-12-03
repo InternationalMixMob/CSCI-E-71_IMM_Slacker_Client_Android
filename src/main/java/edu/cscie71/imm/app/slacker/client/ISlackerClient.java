@@ -34,4 +34,13 @@ public interface ISlackerClient {
      * @see <a href="https://api.slack.com/docs/oauth">OAuth</a>
      */
     String getOAuthToken(String clientId, String clientSecret, String code, String redirectUri);
+
+    /**
+     * Get list of team's channels from Slack.
+     * @param token: OAuth token
+     * @param excludeArchivedChannels: Filters out archived channels when true.
+     * @return JSON string from Slack API
+     * @see <a href="https://api.slack.com/methods/channels.list">channels.list</a>
+     */
+    String getChannelList(String token, boolean excludeArchivedChannels);
 }
