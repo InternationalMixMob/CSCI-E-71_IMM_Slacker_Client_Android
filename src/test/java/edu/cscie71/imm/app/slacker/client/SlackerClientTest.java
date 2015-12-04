@@ -132,4 +132,48 @@ public class SlackerClientTest {
         Assert.assertTrue(userInfo.contains("\"ok\":false"));
         Assert.assertTrue(userInfo.contains("\"error\":\"malformed_url: "));
     }
+
+    @Test
+    public void testActiveChannelsListIsOKAndContainsChannels() throws Exception {
+        clientDriver.addExpectation(
+                onRequestTo("/api/channels.list").withMethod(Method.GET)
+                        .withParam("token", token)
+                        .withParam("exclude_archived", "1"),
+                giveResponse("{\"ok\":true,\"channels\":[{\"name\":\"general\"}]}", "text/plain")
+        );
+        String channelsList = mockSlack.getChannelList(token, true);
+        Assert.assertTrue(channelsList.contains("\"ok\":true"));
+        Assert.assertTrue(channelsList.contains("\"name\":\"general\""));
+        Assert.assertFalse(channelsList.contains("\"name\":\"archived\""));
+    }
+
+    @Test
+    public void testRealActiveChannelsListIsOKAndContainsChannels() throws Exception {
+        String channelsList = realSlack.getChannelList(token, true);
+        Assert.assertTrue(channelsList.contains("\"ok\":true"));
+        Assert.assertTrue(channelsList.contains("\"name\":\"internationalmixmob\""));
+        Assert.assertFalse(channelsList.contains("\"name\":\"homework-2-3\""));
+    }
+
+    @Test
+    public void testAllChannelsListIsOKAndContainsChannels() throws Exception {
+        clientDriver.addExpectation(
+                onRequestTo("/api/channels.list").withMethod(Method.GET)
+                        .withParam("token", token),
+                giveResponse("{\"ok\":true,\"channels\":[{\"name\":\"general\"},{\"name\":\"archived\"}]}",
+                        "text/plain")
+        );
+        String channelsList = mockSlack.getChannelList(token, false);
+        Assert.assertTrue(channelsList.contains("\"ok\":true"));
+        Assert.assertTrue(channelsList.contains("\"name\":\"general\""));
+        Assert.assertTrue(channelsList.contains("\"name\":\"archived\""));
+    }
+
+    @Test
+    public void testRealAllChannelsListIsOKAndContainsChannels() throws Exception {
+        String channelsList = realSlack.getChannelList(token, false);
+        Assert.assertTrue(channelsList.contains("\"ok\":true"));
+        Assert.assertTrue(channelsList.contains("\"name\":\"internationalmixmob\""));
+        Assert.assertTrue(channelsList.contains("\"name\":\"homework-2-3\""));
+    }
 }
