@@ -36,14 +36,13 @@ public class SlackerClientTest {
 
     @Test
     public void testResponseIsOkAndContainsMessage() throws Exception {
-        StringBuilder sb = new StringBuilder();
-        sb.append("token=").append(token);
-        sb.append("&channel=").append(immTestChannel);
-        sb.append("&text=").append(URLEncoder.encode(message));
-        sb.append("&as_user=true");
+        String body = "token=" + token
+                + "&channel=" + immTestChannel
+                + "&text=" + URLEncoder.encode(message)
+                + "&as_user=true";
         clientDriver.addExpectation(
                 onRequestTo("/api/chat.postMessage").withMethod(Method.POST)
-                        .withBody(sb.toString(), "application/x-www-form-urlencoded"),
+                        .withBody(body, "application/x-www-form-urlencoded"),
                 giveResponse("\"ok\":true,\"text\":\"This is the Android test.\"", "text/plain")
         );
         String okMsgResponse = mockSlack.postMessage(token, immTestChannel, message);
