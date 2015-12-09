@@ -130,10 +130,17 @@ public class SlackerClientTest {
     }
 
     @Test
-    public void testMalformedURL() throws Exception {
+    public void testMalformedURLInMakeGetRequest() throws Exception {
         String userInfo = badURL.getUserInfo(token, "U0A12L68J");
         Assert.assertTrue(userInfo.contains("\"ok\":false"));
         Assert.assertTrue(userInfo.contains("\"error\":\"malformed_url: "));
+    }
+
+    @Test
+    public void testMalformedURLInMakePostRequest() throws Exception {
+        String postMessage = badURL.postMessage(token, immTestChannel, message);
+        Assert.assertTrue(postMessage.contains("\"ok\":false"));
+        Assert.assertTrue(postMessage.contains("\"error\":\"malformed_url: "));
     }
 
     @Test
