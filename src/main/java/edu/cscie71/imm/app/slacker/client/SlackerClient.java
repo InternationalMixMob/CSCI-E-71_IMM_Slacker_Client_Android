@@ -1,12 +1,12 @@
 package edu.cscie71.imm.app.slacker.client;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
+import java.io.*;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLEncoder;
+import java.util.HashMap;
+import java.util.Map;
 
 public class SlackerClient implements ISlackerClient {
 
@@ -28,11 +28,12 @@ public class SlackerClient implements ISlackerClient {
      * @inheritDoc
      */
     public String postMessage(String token, String channel, String message) {
-        String queryString = "?token=" + URLEncoder.encode(token)
-                + "&channel=" + URLEncoder.encode(channel)
-                + "&text=" + URLEncoder.encode(message)
-                + "&as_user=" + "true";
-        return makeRestTransaction(BASE_URL + MESSAGE + queryString, "POST");
+        Map<String, String> payload = new HashMap<String, String>();
+        payload.put("token", token);
+        payload.put("channel", channel);
+        payload.put("text", message);
+        payload.put("as_user", "true");
+        return makePostRequest(BASE_URL + MESSAGE, payload);
     }
 
     /**
@@ -82,5 +83,47 @@ public class SlackerClient implements ISlackerClient {
         } catch (IOException e) {
             return "{\"ok\":false,\"error\":\"io_exception: " + e.getMessage() + "\"}";
         }
+    }
+
+    private String makePostRequest(String url, Map<String, String> payload) {
+        try {
+            String formEncoded = urlEncode(payload);
+            URL postURL = new URL(url);
+            HttpURLConnection connection = (HttpURLConnection) postURL.openConnection();
+            connection.setRequestMethod("POST");
+            connection.setRequestProperty("Content-Type", "application/x-www-form-urlencoded");
+            connection.setDoOutput(true);
+            OutputStream toServer = connection.getOutputStream();
+            toServer.write(formEncoded.getBytes());
+            toServer.flush();
+            BufferedReader response = new BufferedReader(
+                    new InputStreamReader(connection.getInputStream())
+            );
+            StringBuilder slackJsonSB = new StringBuilder();
+            String nextLine = "";
+            while ((nextLine = response.readLine()) != null) {
+                slackJsonSB.append(nextLine);
+            }
+            return slackJsonSB.toString();
+        } catch (UnsupportedEncodingException e) {
+            return "{\"ok\":false}";
+        } catch (MalformedURLException e) {
+            return "{\"ok\":false,\"error\":\"malformed_url: " + e.getMessage() + "\"}";
+        } catch (IOException e) {
+            return "{\"ok\":false,\"error\":\"io_exception: " + e.getMessage() + "\"}";
+        }
+    }
+
+    private String urlEncode(Map<String, String> payload) throws UnsupportedEncodingException {
+        StringBuilder querySB = new StringBuilder();
+        for (Map.Entry<String, String> entry : payload.entrySet()) {
+            if (querySB.length() > 0) {
+                querySB.append("&");
+            }
+            querySB.append(URLEncoder.encode(entry.getKey(), "UTF-8"))
+                    .append("=")
+                    .append(URLEncoder.encode(entry.getValue(), "UTF-8"));
+        }
+        return querySB.toString();
     }
 }
