@@ -4,6 +4,8 @@ import org.junit.*;
 import com.github.restdriver.clientdriver.ClientDriverRequest.Method;
 import com.github.restdriver.clientdriver.ClientDriverRule;
 
+import java.net.URLEncoder;
+
 import static com.github.restdriver.clientdriver.RestClientDriver.*;
 
 public class SlackerClientTest {
@@ -34,12 +36,14 @@ public class SlackerClientTest {
 
     @Test
     public void testResponseIsOkAndContainsMessage() throws Exception {
+        StringBuilder sb = new StringBuilder();
+        sb.append("token=").append(token);
+        sb.append("&channel=").append(immTestChannel);
+        sb.append("&text=").append(URLEncoder.encode(message));
+        sb.append("&as_user=true");
         clientDriver.addExpectation(
                 onRequestTo("/api/chat.postMessage").withMethod(Method.POST)
-                        .withParam("as_user", "true")
-                        .withParam("token", token)
-                        .withParam("channel", immTestChannel)
-                        .withParam("text", message),
+                        .withBody(sb.toString(), "application/x-www-form-urlencoded"),
                 giveResponse("\"ok\":true,\"text\":\"This is the Android test.\"", "text/plain")
         );
         String okMsgResponse = mockSlack.postMessage(token, immTestChannel, message);

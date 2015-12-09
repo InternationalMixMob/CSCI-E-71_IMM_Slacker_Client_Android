@@ -5,7 +5,7 @@ import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLEncoder;
-import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.Map;
 
 public class SlackerClient implements ISlackerClient {
@@ -28,7 +28,7 @@ public class SlackerClient implements ISlackerClient {
      * @inheritDoc
      */
     public String postMessage(String token, String channel, String message) {
-        Map<String, String> payload = new HashMap<String, String>();
+        Map<String, String> payload = new LinkedHashMap<String, String>();
         payload.put("token", token);
         payload.put("channel", channel);
         payload.put("text", message);
