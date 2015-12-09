@@ -82,8 +82,6 @@ public class SlackerClient implements ISlackerClient {
                 sb.append(nextLine);
             }
             return sb.toString();
-        } catch (UnsupportedEncodingException e) {
-            return "{\"ok\":false}";
         } catch (MalformedURLException e) {
             return "{\"ok\":false,\"error\":\"malformed_url: " + e.getMessage() + "\"}";
         } catch (IOException e) {
@@ -111,8 +109,6 @@ public class SlackerClient implements ISlackerClient {
                 sb.append(nextLine);
             }
             return sb.toString();
-        } catch (UnsupportedEncodingException e) {
-            return "{\"ok\":false}";
         } catch (MalformedURLException e) {
             return "{\"ok\":false,\"error\":\"malformed_url: " + e.getMessage() + "\"}";
         } catch (IOException e) {
