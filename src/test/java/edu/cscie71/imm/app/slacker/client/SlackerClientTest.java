@@ -4,6 +4,8 @@ import org.junit.*;
 import com.github.restdriver.clientdriver.ClientDriverRequest.Method;
 import com.github.restdriver.clientdriver.ClientDriverRule;
 
+import java.net.URLEncoder;
+
 import static com.github.restdriver.clientdriver.RestClientDriver.*;
 
 public class SlackerClientTest {
@@ -34,12 +36,13 @@ public class SlackerClientTest {
 
     @Test
     public void testResponseIsOkAndContainsMessage() throws Exception {
+        String body = "token=" + token
+                + "&channel=" + immTestChannel
+                + "&text=" + URLEncoder.encode(message)
+                + "&as_user=true";
         clientDriver.addExpectation(
                 onRequestTo("/api/chat.postMessage").withMethod(Method.POST)
-                        .withParam("as_user", "true")
-                        .withParam("token", token)
-                        .withParam("channel", immTestChannel)
-                        .withParam("text", message),
+                        .withBody(body, "application/x-www-form-urlencoded"),
                 giveResponse("\"ok\":true,\"text\":\"This is the Android test.\"", "text/plain")
         );
         String okMsgResponse = mockSlack.postMessage(token, immTestChannel, message);
@@ -127,10 +130,17 @@ public class SlackerClientTest {
     }
 
     @Test
-    public void testMalformedURL() throws Exception {
+    public void testMalformedURLInMakeGetRequest() throws Exception {
         String userInfo = badURL.getUserInfo(token, "U0A12L68J");
         Assert.assertTrue(userInfo.contains("\"ok\":false"));
         Assert.assertTrue(userInfo.contains("\"error\":\"malformed_url: "));
+    }
+
+    @Test
+    public void testMalformedURLInMakePostRequest() throws Exception {
+        String postMessage = badURL.postMessage(token, immTestChannel, message);
+        Assert.assertTrue(postMessage.contains("\"ok\":false"));
+        Assert.assertTrue(postMessage.contains("\"error\":\"malformed_url: "));
     }
 
     @Test
