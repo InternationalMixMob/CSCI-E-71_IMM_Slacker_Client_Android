@@ -49,12 +49,11 @@ public class SlackerClient implements ISlackerClient {
     /**
      * @inheritDoc
      */
-    public String getOAuthToken(String clientId, String clientSecret, String code, String redirectUri) {
+    public String getOAuthToken(String clientId, String clientSecret, String code) {
         Map<String, String> query = new LinkedHashMap<String, String>();
         query.put("client_id", clientId);
         query.put("client_secret", clientSecret);
         query.put("code", code);
-        query.put("redirect_uri", redirectUri);
         return makeGetRequest(BASE_URL + OATH_TOKEN, query);
     }
 

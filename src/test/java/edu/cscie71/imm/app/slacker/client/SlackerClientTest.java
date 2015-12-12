@@ -121,11 +121,10 @@ public class SlackerClientTest {
                 onRequestTo("/api/oauth.access").withMethod(Method.GET)
                         .withParam("client_id", "U123")
                         .withParam("client_secret", "U123")
-                        .withParam("code", "X123")
-                        .withParam("redirect_uri", "https://localhost"),
+                        .withParam("code", "X123"),
                 giveResponse("\"access token\":\"xotx-123-123\",\"scope\":\"read\"", "text/plain")
         );
-        String oAuthResponse = mockSlack.getOAuthToken("U123", "U123", "X123", "https://localhost");
+        String oAuthResponse = mockSlack.getOAuthToken("U123", "U123", "X123");
         Assert.assertTrue(oAuthResponse.contains("\"access token\":\"xotx-123-123\""));
     }
 

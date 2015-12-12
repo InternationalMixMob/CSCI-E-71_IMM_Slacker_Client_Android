@@ -29,11 +29,10 @@ public interface ISlackerClient {
      * @param clientId ID of application
      * @param clientSecret Secret of application
      * @param code User login code
-     * @param redirectUri Redirect URL of the application
      * @return JSON string from Slack API
      * @see <a href="https://api.slack.com/docs/oauth">OAuth</a>
      */
-    String getOAuthToken(String clientId, String clientSecret, String code, String redirectUri);
+    String getOAuthToken(String clientId, String clientSecret, String code);
 
     /**
      * Get list of team's channels from Slack.
